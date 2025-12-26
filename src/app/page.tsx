@@ -1,7 +1,9 @@
+import SignIn from "@/components/module/auth/SignIn";
+
 export default function Home() {
   return (
     <div>
-      <h1>Welcome to Amar Chat</h1>
+      <SignIn />
     </div>
   );
 }
