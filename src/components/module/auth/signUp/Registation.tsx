@@ -83,6 +83,87 @@ const Registation = () => {
                       onSubmit={form.handleSubmit(onSubmit)}
                       className="space-y-6"
                     >
+
+                      {/* Full Name */}
+                      <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="auth-input-label ml-1">
+                              Full Name
+                            </FormLabel>
+                            <FormControl>
+                                <Input
+                                  type="name"
+                                  {...field}
+                                  value={field.value || ""}
+                                  id="name"
+                                  name="name"
+                                  required
+                                  className=""
+                                  placeholder="Inpute your full name"
+                                />
+                            </FormControl>
+                            <FormMessage className="text-red-500 text-xs mt-1" />
+                          </FormItem>
+                        )}
+                      />
+
+
+                      {/* Number */}
+                      <FormField
+                        control={form.control}
+                        name="number"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="auth-input-label ml-1">
+                              Phone Number
+                            </FormLabel>
+                            <FormControl>
+                                <Input
+                                  type="number"
+                                  {...field}
+                                  value={field.value || ""}
+                                  id="number"
+                                  name="number"
+                                  required
+                                  className=""
+                                  placeholder="Inpute your phone number"
+                                />
+                            </FormControl>
+                            <FormMessage className="text-red-500 text-xs mt-1" />
+                          </FormItem>
+                        )}
+                      />
+
+
+                      {/* Full address */}
+                      <FormField
+                        control={form.control}
+                        name="address"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="auth-input-label ml-1">
+                              Full Address
+                            </FormLabel>
+                            <FormControl>
+                                <Input
+                                  type="address"
+                                  {...field}
+                                  value={field.value || ""}
+                                  id="address"
+                                  name="address"
+                                  required
+                                  className=""
+                                  placeholder="Inpute your full address"
+                                />
+                            </FormControl>
+                            <FormMessage className="text-red-500 text-xs mt-1" />
+                          </FormItem>
+                        )}
+                      />
+
                       {/* Email */}
                       <FormField
                         control={form.control}
@@ -161,7 +242,7 @@ const Registation = () => {
                       {/* Submit Button */}
                       <Button
                         type="submit"
-                        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-black bg-green-700 hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 uppercase"
+                        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-black bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 uppercase"
                         disabled={isSubmitting}
                       >
                         {isSubmitting ? (
@@ -189,7 +270,7 @@ const Registation = () => {
                             Processing...
                           </span>
                         ) : (
-                          "Sign in"
+                          "Sign Up"
                         )}
                       </Button>
                     </form>
