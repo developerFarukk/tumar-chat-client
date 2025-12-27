@@ -1,3 +1,4 @@
+import Registation from "@/components/module/auth/signUp/Registation";
 
 
 
@@ -6,7 +7,7 @@ const SignupPageServer = () => {
 
     return (
         <div>
-            <div> The Component is Start SignupPageServer </div>
+            <Registation />
         </div>
     );
 };

@@ -1,29 +1,19 @@
-
 "use client";
 
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { LockIcon, MailIcon, MessageCircleIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
-import signin from "../../../../../public/login.png";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import signUp from "../../../../../public/signup.png";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema } from "../authValidation";
+import { signupValidationSchema } from "../authValidation";
 
-
-const SignIn = () => {
+const Registation = () => {
   const form = useForm({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(signupValidationSchema),
   });
 
   const {
@@ -67,7 +57,7 @@ const SignIn = () => {
                       Welcome Back
                     </h2>
                     <p className="text-slate-400">
-                      Login to access to your account
+                      Sign up & Login to access to your account
                     </p>
                   </div>
 
@@ -137,7 +127,7 @@ const SignIn = () => {
 
                       <Button
                         type="submit"
-                        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-black bg-green-300 hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 uppercase"
+                        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-black bg-green-700 hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 uppercase"
                         disabled={isSubmitting}
                       >
                         {isSubmitting ? (
@@ -172,8 +162,11 @@ const SignIn = () => {
                   </Form>
 
                   <div className="mt-6 text-center">
-                    <Link href="/signup" className="auth-link">
-                      Don not have an account? <span className="font-semibold text-yellow-800">Sign Up</span>
+                    <Link href="/" className="auth-link">
+                      Already have an account?{" "}
+                      <span className="font-semibold text-yellow-800">
+                        Login
+                      </span>
                     </Link>
                   </div>
                 </div>
@@ -183,7 +176,7 @@ const SignIn = () => {
               <div className="hidden md:w-1/2 md:flex items-center justify-center p-6  from-slate-800/20 to-transparent">
                 <div>
                   <Image
-                    src={signin}
+                    src={signUp}
                     alt="People using mobile devices"
                     className="w-full h-auto object-contain"
                   />
@@ -208,4 +201,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default Registation;
