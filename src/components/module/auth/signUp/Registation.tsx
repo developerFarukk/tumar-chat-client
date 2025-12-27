@@ -2,16 +2,32 @@
 
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { LockIcon, MailIcon, MessageCircleIcon } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  LockIcon,
+  MailIcon,
+  MessageCircleIcon,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import signUp from "../../../../../public/signup.png";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupValidationSchema } from "../authValidation";
+import React from "react";
 
 const Registation = () => {
+  const [showPassword, setShowPassword] = React.useState(false);
+
   const form = useForm({
     resolver: zodResolver(signupValidationSchema),
   });
@@ -67,6 +83,7 @@ const Registation = () => {
                       onSubmit={form.handleSubmit(onSubmit)}
                       className="space-y-6"
                     >
+                      {/* Email */}
                       <FormField
                         control={form.control}
                         name="email"
@@ -95,6 +112,8 @@ const Registation = () => {
                           </FormItem>
                         )}
                       />
+
+                      {/* Password */}
                       <FormField
                         control={form.control}
                         name="password"
@@ -110,14 +129,28 @@ const Registation = () => {
                                 <LockIcon className="auth-input-icon" />
 
                                 <Input
-                                  type="password"
+                                  type={showPassword ? "text" : "password"}
                                   {...field}
                                   id="password"
                                   name="password"
                                   value={field.value || ""}
-                                  className="input"
+                                  className="input pr-10"
                                   placeholder="Enter your password"
                                 />
+
+                                {/* Eye Icon Button */}
+                                <button
+                                  type="button"
+                                  onClick={() => setShowPassword(!showPassword)}
+                                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-gray-400 focus:outline-none p-1 transition-colors"
+                                  aria-label={
+                                    showPassword
+                                      ? "Hide password"
+                                      : "Show password"
+                                  }
+                                >
+                                  {showPassword ? <Eye /> : <EyeOff />}
+                                </button>
                               </div>
                             </FormControl>
                             <FormMessage className="text-red-500 text-xs mt-1" />
@@ -125,6 +158,7 @@ const Registation = () => {
                         )}
                       />
 
+                      {/* Submit Button */}
                       <Button
                         type="submit"
                         className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-black bg-green-700 hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 uppercase"
