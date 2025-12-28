@@ -7,7 +7,7 @@ import Image from "next/image";
 // import { useChatStore } from "../store/useChatStore";
 import userProfile from "../../../../public/avatar.png"
 
-const mouseClickSound = new Audio("/sounds/mouse-click.mp3");
+// const mouseClickSound = new Audio("/sounds/mouse-click.mp3");
 
 function ProfileHeader() {
 //   const { logout, authUser, updateProfile } = useAuthStore();
@@ -82,7 +82,7 @@ function ProfileHeader() {
           </button>
 
           {/* SOUND TOGGLE BTN */}
-          <button
+          {/* <button
             className="text-slate-400 hover:text-slate-200 transition-colors"
             onClick={() => {
               // play click sound before toggling
@@ -93,12 +93,12 @@ function ProfileHeader() {
             //   toggleSound();
             }}
           >
-            {/* {isSoundEnabled ? (
+            {isSoundEnabled ? (
               <Volume2Icon className="size-5" />
             ) : (
               <VolumeOffIcon className="size-5" />
-            )} */}
-          </button>
+            )}
+          </button> */}
         </div>
       </div>
     </div>
