@@ -1,27 +1,23 @@
 "use client";
 
-import ProfileHeader from "./ProfileHeader";
+import { MessageCircleIcon } from "lucide-react";
 
 const ChatPageHome = () => {
   return (
     <div>
-      <div className="relative w-full max-w-6xl h-200vh">
-        {/* <BorderAnimatedContainer> */}
-          {/* LEFT SIDE */}
-          <div className="w-80 bg-slate-800/50 backdrop-blur-sm flex flex-col">
-            <ProfileHeader />
-            {/* <ActiveTabSwitch /> */}
-
-            <div className="flex-1 overflow-y-auto p-4 space-y-2">
-              {/* {activeTab === "chats" ? <ChatsList /> : <ContactList />} */}
-            </div>
+      <div className="h-screen flex items-center justify-center overflow-hidden px-4 text-center">
+        <div className="flex flex-col items-center justify-center gap-4 max-w-md">
+          <div className="size-20 bg-cyan-500/20 rounded-full flex items-center justify-center">
+            <MessageCircleIcon className="size-10 text-cyan-400" />
           </div>
 
-          {/* RIGHT SIDE */}
-          <div className="flex-1 flex flex-col bg-slate-900/50 backdrop-blur-sm">
-            {/* {selectedUser ? <ChatContainer /> : <NoConversationPlaceholder />} */}
-          </div>
-        {/* </BorderAnimatedContainer> */}
+          <h3 className="text-xl font-semibold">Select a conversation</h3>
+
+          <p className="text-slate-600">
+            Choose a contact from the sidebar to start chatting or continue a
+            previous conversation.
+          </p>
+        </div>
       </div>
     </div>
   );
