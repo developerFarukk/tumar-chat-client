@@ -204,17 +204,81 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         {/* Tab Contents */}
-        <Tabs defaultValue="account" className="mx-auto border-amber-100 border-2 ">
+        <Tabs defaultValue="account" className=" border-amber-100 border-2 ">
           <div className=" w-full">
             <TabsList className="w-full bg-amber-100 italic">
-              <TabsTrigger value="chats" className="font-bold">Chats</TabsTrigger>
-              <TabsTrigger value="contacts" className="font-bold">Contacts</TabsTrigger>
+              <TabsTrigger value="chats" className="font-bold">
+                Chats
+              </TabsTrigger>
+              <TabsTrigger value="contacts" className="font-bold">
+                Contacts
+              </TabsTrigger>
             </TabsList>
           </div>
           <TabsContent value="chats">
-            Make changes to your account here.
+            <Link href="/chat">
+              <div className="border-2 p-1 rounded-lg">
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-2">
+                    <div className="size-10">
+                      <Image
+                        // src={selectedImg || authUser.profilePic || "/avatar.png"}
+                        src={userProfile}
+                        alt="User image"
+                        className="size-full object-cover"
+                      />
+                    </div>
+                    <h2 className="font-semibold">Omar Faruk</h2>
+                  </div>
+                  <h2 className="">Ofline</h2>
+                </div>
+              </div>
+            </Link>
           </TabsContent>
-          <TabsContent value="contacts">Change your password here.</TabsContent>
+          <TabsContent value="contacts">
+            <div className="">
+              <div className="mt-1">
+                <Link href="/chat">
+                <div className="border-2 p-1 rounded-lg">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <div className="size-10">
+                        <Image
+                          // src={selectedImg || authUser.profilePic || "/avatar.png"}
+                          src={userProfile}
+                          alt="User image"
+                          className="size-full object-cover"
+                        />
+                      </div>
+                      <h2 className="font-semibold">Omar Faruk</h2>
+                    </div>
+                    <h2 className="">Ofline</h2>
+                  </div>
+                </div>
+              </Link>
+              </div>
+              <div className="mt-1">
+                <Link href="/chat">
+                  <div className="border-2 p-1 rounded-lg">
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-2">
+                        <div className="size-10">
+                          <Image
+                            // src={selectedImg || authUser.profilePic || "/avatar.png"}
+                            src={userProfile}
+                            alt="User image"
+                            className="size-full object-cover"
+                          />
+                        </div>
+                        <h2 className="font-semibold">Omar Faruk</h2>
+                      </div>
+                      <h2 className="">Ofline</h2>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            </div>
+          </TabsContent>
         </Tabs>
 
         {/* Main Content */}
