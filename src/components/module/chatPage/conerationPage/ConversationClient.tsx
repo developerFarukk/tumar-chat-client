@@ -33,21 +33,33 @@ const ConversationClient = () => {
         </header>
 
         {/* body */}
-        <div className="min-h-[70vh] bg-sky-100 m-2 p-2 rounded-lg">
-          <div>
-            {/* My text */}
-            <div className="flex justify-end mt-1">
-              <h2 className="text-lg bg-sky-300 w-fit rounded-md p-2">
-                this is my text
-              </h2>
+        <div className="min-h-[70vh] bg-sky-100 m-2 p-2 rounded-lg flex flex-col-reverse overflow-y-auto">
+          <div className="space-y-3">
+            {/* My text - Latest message at bottom */}
+            <div className="flex justify-end">
+              <div className="max-w-[80%]">
+                <div className="bg-sky-300 rounded-2xl rounded-tr-none p-3">
+                  <p className="text-gray-800">this is my latest text</p>
+                </div>
+                <span className="text-xs text-gray-500 block text-right mt-1">
+                  10:30 AM
+                </span>
+              </div>
             </div>
 
-            {/*  friend  text */}
-            <div className="flex justify-start mt-1">
-              <h2 className="text-lg bg-amber-100 w-fit rounded-md p-2">
-                this is friend text
-              </h2>
+            {/* friend text */}
+            <div className="flex justify-start">
+              <div className="max-w-[80%]">
+                <div className="bg-amber-100 rounded-2xl rounded-tl-none p-3">
+                  <p className="text-gray-800">this is friend text</p>
+                </div>
+                <span className="text-xs text-gray-500 block mt-1">
+                  10:25 AM
+                </span>
+              </div>
             </div>
+
+            {/* আরও মেসেজ... */}
           </div>
         </div>
 
