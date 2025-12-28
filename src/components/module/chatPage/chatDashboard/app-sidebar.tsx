@@ -4,7 +4,6 @@ import * as React from "react";
 import {
   BookOpen,
   Bot,
-  CircleUserRound,
   Frame,
   LifeBuoy,
   Map,
@@ -28,6 +27,7 @@ import { NavUser } from "./nav-user";
 import Link from "next/link";
 import Image from "next/image";
 import userProfile from "../../../../../public/avatar.png";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const data = {
   user: {
@@ -203,6 +203,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
+        {/* Tab Contents */}
+        <Tabs defaultValue="account" className="mx-auto border-amber-100 border-2 ">
+          <div className=" w-full">
+            <TabsList className="w-full bg-amber-100 italic">
+              <TabsTrigger value="chats" className="font-bold">Chats</TabsTrigger>
+              <TabsTrigger value="contacts" className="font-bold">Contacts</TabsTrigger>
+            </TabsList>
+          </div>
+          <TabsContent value="chats">
+            Make changes to your account here.
+          </TabsContent>
+          <TabsContent value="contacts">Change your password here.</TabsContent>
+        </Tabs>
+
+        {/* Main Content */}
         <NavMain items={data.navMain} />
       </SidebarContent>
       <SidebarFooter>

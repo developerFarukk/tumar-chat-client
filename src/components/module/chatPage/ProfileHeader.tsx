@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { LogOutIcon, VolumeOffIcon, Volume2Icon } from "lucide-react";
+import {  useRef } from "react";
+import { LogOutIcon } from "lucide-react";
 import Image from "next/image";
 // import { useAuthStore } from "../store/useAuthStore";
 // import { useChatStore } from "../store/useChatStore";
