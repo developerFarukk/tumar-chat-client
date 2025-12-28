@@ -6,7 +6,7 @@ import { Button } from "../ui/button";
 export default function SendMessage() {
   return (
     <div className="w-full">
-      <div className="relative flex font-sans py-8 w-full justify-center items-center gap-2">
+      <div className="relative flex font-sans  w-full justify-center items-center gap-2">
 
         {/* message inpute  */}
         <div className="relative p-px rounded-2xl shadow-lg w-full">
@@ -42,3 +42,4 @@ export default function SendMessage() {
     </div>
   );
 }
+

@@ -51,7 +51,7 @@ export default function DashboardLayout({
                         <div className="aspect-video rounded-xl bg-muted/50" />
                         <div className="aspect-video rounded-xl bg-muted/50" />
                     </div> */}
-          <div className="min-h-screen flex-1 rounded-xl bg-muted/50 md:min-h-min p-2">
+          <div className=" rounded-xl bg-muted/50  p-2">
             {children}
           </div>
         </div>
