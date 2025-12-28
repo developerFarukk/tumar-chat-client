@@ -218,7 +218,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <TabsContent value="chats">
             <div className="">
               <div className="mt-1">
-                <Link href="/chat">
+                <Link href="/chat/user">
                   <div className="border-2 p-1 rounded-lg">
                     <div className="flex justify-between items-center">
                       <div className="flex items-center gap-2">
