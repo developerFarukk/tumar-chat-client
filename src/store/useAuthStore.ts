@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import app_axios from "@/lib/axios";
+import { TLogin } from "@/type/auth";
+import { toast } from "sonner";
 import { create } from "zustand";
 
 export const useAuthStore = create((set, get) => ({
@@ -8,18 +12,18 @@ export const useAuthStore = create((set, get) => ({
   socket: null,
   onlineUsers: [],
 
-  checkAuth: async () => {
-    try {
-      const res = await axiosInstance.get("/auth/check");
-      set({ authUser: res.data });
-    //   get().connectSocket();
-    } catch (error) {
-      console.log("Error in authCheck:", error);
-      set({ authUser: null });
-    } finally {
-      set({ isCheckingAuth: false });
-    }
-  },
+//   checkAuth: async () => {
+//     try {
+//       const res = await app_axios.get("/auth/login");
+//       set({ authUser: res.data });
+//     //   get().connectSocket();
+//     } catch (error) {
+//       console.log("Error in authCheck:", error);
+//       set({ authUser: null });
+//     } finally {
+//       set({ isCheckingAuth: false });
+//     }
+//   },
 
 //   signup: async (data) => {
 //     set({ isSigningUp: true });
@@ -36,17 +40,24 @@ export const useAuthStore = create((set, get) => ({
 //     }
 //   },
 
-  login: async (data) => {
+// Login Function
+  login: async (data: TLogin) => {
+    
     set({ isLoggingIn: true });
     try {
-      const res = await axiosInstance.post("/auth/login", data);
+      const res = await app_axios.post("/auth/login", data);
       set({ authUser: res.data });
 
-      toast.success("Logged in successfully");
+      console.log("first Login", res.data);
 
-      get().connectSocket();
+      toast.success(res.data?.message || "Login successfully");
+
+    //   get().connectSocket();
     } catch (error) {
-      toast.error(error.response.data.message);
+        const err = error as any;
+        console.log("err", err.response.data.details);
+        
+      toast.error(err.response.data.details);
     } finally {
       set({ isLoggingIn: false });
     }

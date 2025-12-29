@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import {
@@ -25,9 +26,12 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "../authValidation";
 import React from "react";
+import { useAuthStore } from "@/store/useAuthStore";
+import { toast } from "sonner";
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = React.useState(false);
+  const { login, isLoggingIn } = useAuthStore();
 
   const form = useForm({
     resolver: zodResolver(loginSchema),
@@ -40,16 +44,22 @@ const SignIn = () => {
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     console.log(data);
 
+    const Login = await login(data);
+
+    console.log("new login", Login);
+
     // try {
-    //   const res = await loginUser(data);
-    //   setIsLoading(true);
+    //   const res = await login(data);
+    //   // console.log("dtaaaa", res.data);
+
+    //   isLoggingIn(true);
     //   if (res?.success) {
     //     toast.success(res?.message);
-    //     if (redirect) {
-    //       router.push(redirect);
-    //     } else {
-    //       router.push("/");
-    //     }
+    //     // if (redirect) {
+    //     //   router.push(redirect);
+    //     // } else {
+    //     //   router.push("/");
+    //     // }
     //   } else {
     //     toast.error(res?.message);
     //   }
@@ -57,6 +67,10 @@ const SignIn = () => {
     //   console.error(err);
     // }
   };
+
+  // if (isLoggingIn) {
+  //   console.log("Loading");
+  // }
 
   return (
     <div>
