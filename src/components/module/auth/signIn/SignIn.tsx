@@ -28,44 +28,43 @@ import { loginSchema } from "../authValidation";
 import React from "react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "sonner";
+import { useRouter, useSearchParams } from "next/navigation";
+import { TLogin } from "@/type/auth";
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = React.useState(false);
+
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirectPath");
+  const router = useRouter();
+
   const { login, isLoggingIn } = useAuthStore();
 
-  const form = useForm({
+  const form = useForm<TLogin>({
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "faruk@gmail.com",
+      password: "1234",
+    },
   });
 
   const {
     formState: { isSubmitting },
   } = form;
 
-  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<TLogin> = async (data) => {
+    const res = await login(data);
 
-    const Login = await login(data);
+    console.log("data", res?.data);
 
-    console.log("new login", Login);
+    if (res?.success) {
+      toast.success(res?.data?.message);
 
-    // try {
-    //   const res = await login(data);
-    //   // console.log("dtaaaa", res.data);
-
-    //   isLoggingIn(true);
-    //   if (res?.success) {
-    //     toast.success(res?.message);
-    //     // if (redirect) {
-    //     //   router.push(redirect);
-    //     // } else {
-    //     //   router.push("/");
-    //     // }
-    //   } else {
-    //     toast.error(res?.message);
-    //   }
-    // } catch (err: any) {
-    //   console.error(err);
-    // }
+      if (redirect) router.push(redirect);
+      else router.push("/chat");
+    } else {
+      toast.error(res?.message);
+    }
   };
 
   // if (isLoggingIn) {
