@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export function NavUser({
   user,
@@ -39,44 +40,16 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar();
   const { logout, isLoggingOut, authUser, updateProfile } = useAuthStore();
+  const router = useRouter();
 
   const handleLogOut = async () => {
-    // console.log("logout success");
-
-    // const res = await logout();
-
-    // console.log(res);
-
-    // setIsLoading(true);
-    // try {
-    //   const res = await logout();
-    //   toast.success("Logout successful!");
-    //   // setUser(null);
-    //   // router.push("/");
-    // } catch (error) {
-    //   toast.error("Logout failed. Please try again.");
-    // }
-    // finally {
-    //   setIsLoading(false);
-    // }
-
-    // const res = await logout();
-
-    // if (res?.success) {
-    //   toast.success("Logout successful");
-    //   // router.push("/");  // চাইলে ব্যবহার করো
-    // } else {
-    //   toast.error(res?.message || "Logout failed");
-    // }
 
     const res = await logout();
 
-    console.log(res.message);
-    
-
+    console.log(res?.data?.message);
     if (res?.success) {
-      toast.success("Logout successful");
-      // router.push("/");  // চাইলে ব্যবহার করো
+      toast.success(res?.data?.message);
+      router.push("/");
     } else {
       toast.error(res?.message || "Logout failed");
     }

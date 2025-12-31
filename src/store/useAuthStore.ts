@@ -3,7 +3,6 @@
 import app_axios from "@/lib/axios";
 import { TLogin } from "@/type/auth";
 import { TAuthStore } from "@/type/store";
-import { toast } from "sonner";
 import { create } from "zustand";
 
 export const useAuthStore = create<TAuthStore>((set, get) => ({
@@ -15,18 +14,18 @@ export const useAuthStore = create<TAuthStore>((set, get) => ({
   socket: null,
   onlineUsers: [],
 
-  //   checkAuth: async () => {
-  //     try {
-  //       const res = await app_axios.get("/auth/login");
-  //       set({ authUser: res.data });
+  // checkAuth: async () => {
+  //   try {
+  //     const res = await app_axios.get("/auth/login");
+  //     set({ authUser: res.data });
   //     //   get().connectSocket();
-  //     } catch (error) {
-  //       console.log("Error in authCheck:", error);
-  //       set({ authUser: null });
-  //     } finally {
-  //       set({ isCheckingAuth: false });
-  //     }
-  //   },
+  //   } catch (error) {
+  //     console.log("Error in authCheck:", error);
+  //     set({ authUser: null });
+  //   } finally {
+  //     set({ isCheckingAuth: false });
+  //   }
+  // },
 
   // signup: async (data) => {
   //   set({ isSigningUp: true });
@@ -44,6 +43,7 @@ export const useAuthStore = create<TAuthStore>((set, get) => ({
   // },
 
   // Login Function
+  
   login: async (data: TLogin) => {
     set({ isLoggingIn: true });
 
@@ -67,7 +67,12 @@ export const useAuthStore = create<TAuthStore>((set, get) => ({
     set({ isLoggingOut: true });
 
     try {
-      const res = await app_axios.post("/auth/logout");
+      // const res = await app_axios.post("/auth/logout");
+      const res = await app_axios.post(
+        "/auth/logout",
+        {},
+        { withCredentials: true } // 👈 double-safety
+      );
 
       set({ authUser: null });
 
