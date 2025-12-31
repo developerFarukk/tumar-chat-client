@@ -42,11 +42,15 @@ export function NavUser({
   const { logout, isLoggingOut, authUser, updateProfile } = useAuthStore();
   const router = useRouter();
 
+  console.log("yser", authUser);
+  
+
+  // Logout function
   const handleLogOut = async () => {
 
     const res = await logout();
 
-    console.log(res?.data?.message);
+    // console.log(res?.data?.message);
     if (res?.success) {
       toast.success(res?.data?.message);
       router.push("/");
