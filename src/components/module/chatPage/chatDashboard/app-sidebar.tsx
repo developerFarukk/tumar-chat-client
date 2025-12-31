@@ -28,6 +28,8 @@ import Link from "next/link";
 import Image from "next/image";
 import userProfile from "../../../../../public/avatar.png";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useCurrentUser } from "@/components/shared/useCurrentUser";
+import Loader from "@/components/shared/Loader";
 
 const data = {
   user: {
@@ -154,6 +156,15 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user, loading } = useCurrentUser();
+
+  if (loading)
+    return (
+      <div>
+        <Loader />
+      </div>
+    );
+
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -169,13 +180,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   {/* <CircleUserRound /> */}
                   <Image
                     // src={selectedImg || authUser.profilePic || "/avatar.png"}
-                    src={userProfile}
+                    src={user?.image || userProfile}
                     alt="User image"
                     className="size-full object-cover"
                   />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">Omar Faruk</span>
+                  <span className="truncate font-medium">{user?.name}</span>
                   <span className="truncate text-xs">Online</span>
                 </div>
               </Link>

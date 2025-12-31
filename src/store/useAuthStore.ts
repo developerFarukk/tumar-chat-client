@@ -14,18 +14,24 @@ export const useAuthStore = create<TAuthStore>((set, get) => ({
   socket: null,
   onlineUsers: [],
 
-  // checkAuth: async () => {
-  //   try {
-  //     const res = await app_axios.get("/auth/login");
-  //     set({ authUser: res.data });
-  //     //   get().connectSocket();
-  //   } catch (error) {
-  //     console.log("Error in authCheck:", error);
-  //     set({ authUser: null });
-  //   } finally {
-  //     set({ isCheckingAuth: false });
-  //   }
-  // },
+  // get current user
+  curentUser: async () => {
+    set({ isCheckingAuth: true });
+    try {
+      const res = await app_axios.get("/auth/check");
+      set({ authUser: res?.data?.data });
+
+      // return { success: true, data: res?.data };
+    } catch (error: any) {
+      set({ authUser: null });
+      return {
+        success: false,
+        message: error?.response?.data?.details || "User is null",
+      };
+    } finally {
+      set({ isCheckingAuth: false });
+    }
+  },
 
   // signup: async (data) => {
   //   set({ isSigningUp: true });
@@ -43,15 +49,16 @@ export const useAuthStore = create<TAuthStore>((set, get) => ({
   // },
 
   // Login Function
-  
+
+  // Login function
   login: async (data: TLogin) => {
     set({ isLoggingIn: true });
 
     try {
       const res = await app_axios.post("/auth/login", data);
-      set({ authUser: res.data });
+      set({ authUser: res?.data?.data });
 
-      return { success: true, data: res.data };
+      return { success: true, data: res?.data };
     } catch (error: any) {
       return {
         success: false,
