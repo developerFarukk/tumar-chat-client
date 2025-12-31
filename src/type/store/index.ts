@@ -2,14 +2,16 @@
 
 import { TLogin } from "../auth";
 
-
 export interface TAuthStore {
   authUser: any;
   isCheckingAuth: boolean;
   isSigningUp: boolean;
   isLoggingIn: boolean;
+  isLoggingOut: boolean;
   socket: any;
   onlineUsers: any[];
 
   login: (data: TLogin) => Promise<any>;
+  logout: () => Promise<any>;
+  // updateProfile: (data: any) => Promise<any>;
 }

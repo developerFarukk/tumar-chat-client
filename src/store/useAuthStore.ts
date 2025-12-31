@@ -11,6 +11,7 @@ export const useAuthStore = create<TAuthStore>((set, get) => ({
   isCheckingAuth: true,
   isSigningUp: false,
   isLoggingIn: false,
+  isLoggingOut: false,
   socket: null,
   onlineUsers: [],
 
@@ -27,20 +28,20 @@ export const useAuthStore = create<TAuthStore>((set, get) => ({
   //     }
   //   },
 
-  //   signup: async (data) => {
-  //     set({ isSigningUp: true });
-  //     try {
-  //       const res = await axiosInstance.post("/auth/signup", data);
-  //       set({ authUser: res.data });
+  // signup: async (data) => {
+  //   set({ isSigningUp: true });
+  //   try {
+  //     const res = await axiosInstance.post("/auth/signup", data);
+  //     set({ authUser: res.data });
 
-  //       toast.success("Account created successfully!");
-  //       get().connectSocket();
-  //     } catch (error) {
-  //       toast.error(error.response.data.message);
-  //     } finally {
-  //       set({ isSigningUp: false });
-  //     }
-  //   },
+  //     toast.success("Account created successfully!");
+  //     get().connectSocket();
+  //   } catch (error) {
+  //     toast.error(error.response.data.message);
+  //   } finally {
+  //     set({ isSigningUp: false });
+  //   }
+  // },
 
   // Login Function
   login: async (data: TLogin) => {
@@ -63,14 +64,21 @@ export const useAuthStore = create<TAuthStore>((set, get) => ({
 
   // Logout Function
   logout: async () => {
+    set({ isLoggingOut: true });
+
     try {
-      await app_axios.post("/auth/logout");
+      const res = await app_axios.post("/auth/logout");
+
       set({ authUser: null });
-      toast.success("Logged out successfully");
-      get().disconnectSocket();
-    } catch (error) {
-      toast.error("Error logging out");
-      console.log("Logout error:", error);
+
+      return { success: true, data: res.data };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error?.response?.data?.details || "Logout failed",
+      };
+    } finally {
+      set({ isLoggingOut: false });
     }
   },
 
