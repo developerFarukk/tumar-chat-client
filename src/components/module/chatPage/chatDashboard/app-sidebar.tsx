@@ -30,130 +30,8 @@ import userProfile from "../../../../../public/avatar.png";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCurrentUser } from "@/components/shared/useCurrentUser";
 import Loader from "@/components/shared/Loader";
-
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  navMain: [
-    {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Support",
-      url: "#",
-      icon: LifeBuoy,
-    },
-    {
-      title: "Feedback",
-      url: "#",
-      icon: Send,
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
-  ],
-};
+import ChatsTab from "../ChatsTab";
+import ContactsTab from "../ContactsTab";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user, loading } = useCurrentUser();
@@ -215,7 +93,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         {/* Tab Contents */}
-        <Tabs defaultValue="account" className=" border-amber-100 border-2 ">
+        <Tabs defaultValue="chats" className=" border-amber-100 border-2 ">
           <div className=" w-full">
             <TabsList className="w-full bg-amber-100 italic">
               <TabsTrigger value="chats" className="font-bold">
@@ -227,72 +105,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </TabsList>
           </div>
           <TabsContent value="chats">
-            <div className="">
-              <div className="mt-1">
-                <Link href="/chat/user">
-                  <div className="border-2 p-1 rounded-lg">
-                    <div className="flex justify-between items-center">
-                      <div className="flex items-center gap-2">
-                        <div className="size-10">
-                          <Image
-                            // src={selectedImg || authUser.profilePic || "/avatar.png"}
-                            src={userProfile}
-                            alt="User image"
-                            className="size-full object-cover"
-                          />
-                        </div>
-                        <h2 className="font-semibold">Omar Faruk</h2>
-                      </div>
-                      <h2 className="">Ofline</h2>
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            </div>
+           <ChatsTab />
           </TabsContent>
           <TabsContent value="contacts">
-            <div className="">
-              <div className="mt-1">
-                <Link href="/chat">
-                  <div className="border-2 p-1 rounded-lg">
-                    <div className="flex justify-between items-center">
-                      <div className="flex items-center gap-2">
-                        <div className="size-10">
-                          <Image
-                            // src={selectedImg || authUser.profilePic || "/avatar.png"}
-                            src={userProfile}
-                            alt="User image"
-                            className="size-full object-cover"
-                          />
-                        </div>
-                        <h2 className="font-semibold">Omar Faruk</h2>
-                      </div>
-                      <h2 className="">Ofline</h2>
-                    </div>
-                  </div>
-                </Link>
-              </div>
-              <div className="mt-1">
-                <Link href="/chat">
-                  <div className="border-2 p-1 rounded-lg">
-                    <div className="flex justify-between items-center">
-                      <div className="flex items-center gap-2">
-                        <div className="size-10">
-                          <Image
-                            // src={selectedImg || authUser.profilePic || "/avatar.png"}
-                            src={userProfile}
-                            alt="User image"
-                            className="size-full object-cover"
-                          />
-                        </div>
-                        <h2 className="font-semibold">Omar Faruk</h2>
-                      </div>
-                      <h2 className="">Ofline</h2>
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            </div>
+            <ContactsTab />
           </TabsContent>
         </Tabs>
 
@@ -300,7 +116,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {/* <NavMain items={data.navMain} /> */}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   );
