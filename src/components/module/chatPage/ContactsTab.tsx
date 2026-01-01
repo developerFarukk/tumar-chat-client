@@ -3,8 +3,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import userProfile from "../../../../public/avatar.png";
+import { TUser } from "@/type/auth";
 
-const ContactsTab = () => {
+export interface TContactsData {
+  allContacts: TUser[]
+}
+
+const ContactsTab = ({allContacts}: TContactsData) => {
+
+  console.log(allContacts);
+  
+
   return (
     <div className="">
       <div className="mt-1">

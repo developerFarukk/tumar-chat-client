@@ -32,7 +32,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     getAllContacts();
   }, [getAllContacts]);
 
-  console.log("get all contacts", allContacts);
+  // console.log("get all contacts", allContacts);
 
   if (loading || isUsersLoading)
     return (
@@ -106,7 +106,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <ChatsTab />
           </TabsContent>
           <TabsContent value="contacts">
-            <ContactsTab />
+            <ContactsTab allContacts={allContacts} />
           </TabsContent>
         </Tabs>
 
