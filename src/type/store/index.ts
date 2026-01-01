@@ -2,6 +2,7 @@
 
 import { TLogin, TUser } from "../auth";
 
+// Auth store interface
 export interface TAuthStore {
   authUser: TUser | null;
   isCheckingAuth: boolean;
@@ -15,4 +16,39 @@ export interface TAuthStore {
   logout: () => Promise<any>;
   curentUser: () => Promise<any>;
   // updateProfile: (data: any) => Promise<any>;
+}
+
+// Chats Store Interface
+export interface TChatStore {
+  allContacts: TUser[];
+  // chats: TUser[];
+  // messages: any[];
+  // activeTab: "chats" | "contacts";
+  // selectedUser: TUser | null;
+
+  isUsersLoading: boolean;
+  // isMessagesLoading: boolean;
+  // isSoundEnabled: boolean;
+
+  // toggleSound: () => void;
+
+  // setActiveTab: (tab: "chats" | "contacts") => void;
+  // setSelectedUser: (user: TUser | null) => void;
+
+  // getAllContacts: () => Promise<void>;
+  getAllContacts: () => Promise<{
+    success: boolean;
+    data?: any;
+    message?: string;
+  }>;
+  // getMyChatPartners: () => Promise<void>;
+  // getMessagesByUserId: (userId: string) => Promise<void>;
+
+  // sendMessage: (messageData: {
+  //   text?: string;
+  //   image?: string;
+  // }) => Promise<void>;
+
+  // subscribeToMessages: () => void;
+  // unsubscribeFromMessages: () => void;
 }

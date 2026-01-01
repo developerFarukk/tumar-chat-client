@@ -1,17 +1,6 @@
 "use client";
 
 import * as React from "react";
-import {
-  BookOpen,
-  Bot,
-  Frame,
-  LifeBuoy,
-  Map,
-  PieChart,
-  Send,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react";
 
 import {
   Sidebar,
@@ -32,11 +21,20 @@ import { useCurrentUser } from "@/components/shared/useCurrentUser";
 import Loader from "@/components/shared/Loader";
 import ChatsTab from "../ChatsTab";
 import ContactsTab from "../ContactsTab";
+import { useChatStore } from "@/store/useChatStore";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user, loading } = useCurrentUser();
+  const { getAllContacts, allContacts, isUsersLoading } =
+    useChatStore();
 
-  if (loading)
+  React.useEffect(() => {
+    getAllContacts();
+  }, [getAllContacts]);
+
+  console.log("get all contacts", allContacts);
+
+  if (loading || isUsersLoading)
     return (
       <div>
         <Loader />
@@ -105,7 +103,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </TabsList>
           </div>
           <TabsContent value="chats">
-           <ChatsTab />
+            <ChatsTab />
           </TabsContent>
           <TabsContent value="contacts">
             <ContactsTab />
