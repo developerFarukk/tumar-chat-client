@@ -19,7 +19,7 @@ const ContactsTab = ({ allContacts }: TContactsData) => {
       {allContacts?.length > 0 ? (
         allContacts.map((contact: TUser) => (
           <div key={contact?._id || contact?.email} className="mt-1">
-            <Link href="/chat">
+            <Link href={`/chat/${contact?._id}`}>
               <div className="border-2 p-1 rounded-lg">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
