@@ -59,6 +59,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     src={user?.image || userProfile}
                     alt="User image"
                     className="size-full object-cover"
+                    height={100}
+                    width={100}
                   />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">

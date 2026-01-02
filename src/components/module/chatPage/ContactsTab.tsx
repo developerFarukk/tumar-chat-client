@@ -28,6 +28,8 @@ const ContactsTab = ({ allContacts }: TContactsData) => {
                         src={ contact?.image || userProfile}
                         alt="User image"
                         className="size-full object-cover"
+                        width={100}
+                        height={100}
                       />
                     </div>
 
