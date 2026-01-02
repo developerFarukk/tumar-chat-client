@@ -21,7 +21,7 @@ export interface TAuthStore {
 // Chats Store Interface
 export interface TChatStore {
   allContacts: TUser[];
-  // chats: TUser[];
+  chats: TUser[];
   // messages: any[];
   // activeTab: "chats" | "contacts";
   // selectedUser: TUser | null;
@@ -41,7 +41,11 @@ export interface TChatStore {
     data?: any;
     message?: string;
   }>;
-  // getMyChatPartners: () => Promise<void>;
+  getMyChatPartners: () => Promise<{
+    success: boolean;
+    data?: any;
+    message?: string;
+  }>;
   // getMessagesByUserId: (userId: string) => Promise<void>;
 
   // sendMessage: (messageData: {

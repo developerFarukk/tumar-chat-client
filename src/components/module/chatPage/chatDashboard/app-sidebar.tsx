@@ -25,14 +25,16 @@ import { useChatStore } from "@/store/useChatStore";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user, loading } = useCurrentUser();
-  const { getAllContacts, allContacts, isUsersLoading } =
+  const { getAllContacts, getMyChatPartners, allContacts, chats, isUsersLoading } =
     useChatStore();
 
   React.useEffect(() => {
     getAllContacts();
-  }, [getAllContacts]);
+    getMyChatPartners();
+  }, [getAllContacts, getMyChatPartners]);
 
   // console.log("get all contacts", allContacts);
+  // console.log("get all contacts", chats);
 
   if (loading || isUsersLoading)
     return (
@@ -105,7 +107,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </TabsList>
           </div>
           <TabsContent value="chats">
-            <ChatsTab />
+            <ChatsTab chatsPerner={chats} />
           </TabsContent>
           <TabsContent value="contacts">
             <ContactsTab allContacts={allContacts} />

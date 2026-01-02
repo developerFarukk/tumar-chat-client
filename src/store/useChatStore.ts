@@ -6,7 +6,7 @@ import { create } from "zustand";
 
 export const useChatStore = create<TChatStore>((set, get) => ({
   allContacts: [],
-  //   chats: [],
+  chats: [],
   //   messages: [],
   //   activeTab: "chats",
   //   selectedUser: null,
@@ -44,17 +44,24 @@ export const useChatStore = create<TChatStore>((set, get) => ({
     }
   },
 
-  //   getMyChatPartners: async () => {
-  //     set({ isUsersLoading: true });
-  //     try {
-  //       const res = await axiosInstance.get("/messages/chats");
-  //       set({ chats: res.data });
-  //     } catch (error) {
-  //       toast.error(error.response.data.message);
-  //     } finally {
-  //       set({ isUsersLoading: false });
-  //     }
-  //   },
+  getMyChatPartners: async () => {
+    set({ isUsersLoading: true });
+    try {
+      const res = await app_axios.get("/message/chat-partner");
+      set({ chats: res?.data?.data });
+      return {
+        success: true,
+        data: res?.data?.data,
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error?.response?.data?.details || "No chat partner data",
+      };
+    } finally {
+      set({ isUsersLoading: false });
+    }
+  },
 
   //   getMessagesByUserId: async (userId) => {
   //     set({ isMessagesLoading: true });
