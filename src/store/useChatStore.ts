@@ -7,11 +7,11 @@ import { create } from "zustand";
 export const useChatStore = create<TChatStore>((set, get) => ({
   allContacts: [],
   chats: [],
-  //   messages: [],
+  messages: [],
   //   activeTab: "chats",
   //   selectedUser: null,
   isUsersLoading: false,
-  //   isMessagesLoading: false,
+  isMessagesLoading: false,
   //   isSoundEnabled: JSON.parse(localStorage.getItem("isSoundEnabled")) === true,
 
   //   toggleSound: () => {
@@ -63,17 +63,24 @@ export const useChatStore = create<TChatStore>((set, get) => ({
     }
   },
 
-  //   getMessagesByUserId: async (userId) => {
-  //     set({ isMessagesLoading: true });
-  //     try {
-  //       const res = await axiosInstance.get(`/messages/${userId}`);
-  //       set({ messages: res.data });
-  //     } catch (error) {
-  //       toast.error(error.response?.data?.message || "Something went wrong");
-  //     } finally {
-  //       set({ isMessagesLoading: false });
-  //     }
-  //   },
+  getMessagesByUserId: async (userId) => {
+    set({ isMessagesLoading: true });
+    try {
+      const res = await app_axios.get(`/message/chat/${userId}`);
+      set({ messages: res?.data?.data });
+      return {
+        success: true,
+        data: res?.data?.data,
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.response?.data?.message || "No chat partner data",
+      };
+    } finally {
+      set({ isMessagesLoading: false });
+    }
+  },
 
   //   sendMessage: async (messageData) => {
   //     const { selectedUser, messages } = get();

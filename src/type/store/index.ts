@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { TLogin, TUser } from "../auth";
+import { TMessage } from "../message";
 
 // Auth store interface
 export interface TAuthStore {
@@ -22,12 +23,12 @@ export interface TAuthStore {
 export interface TChatStore {
   allContacts: TUser[];
   chats: TUser[];
-  // messages: any[];
+  messages: TMessage[];
   // activeTab: "chats" | "contacts";
   // selectedUser: TUser | null;
 
   isUsersLoading: boolean;
-  // isMessagesLoading: boolean;
+  isMessagesLoading: boolean;
   // isSoundEnabled: boolean;
 
   // toggleSound: () => void;
@@ -46,7 +47,11 @@ export interface TChatStore {
     data?: any;
     message?: string;
   }>;
-  // getMessagesByUserId: (userId: string) => Promise<void>;
+  getMessagesByUserId: (userId: string) => Promise<{
+    success: boolean;
+    data?: any;
+    message?: string;
+  }>;
 
   // sendMessage: (messageData: {
   //   text?: string;
