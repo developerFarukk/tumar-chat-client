@@ -12,12 +12,12 @@ const ChatePageServer = async ({
     // const params = useParams();
 //   const id = params.id
   const { id } = await params;
-  console.log(id);
+  // console.log(id);
 
   return (
     <div>
         
-      <ConversationClient />
+      <ConversationClient userId={id} />
     </div>
   );
 };

@@ -1,8 +1,9 @@
 export interface TMessage {
+  _id: string
   senderId: string;
   receiverId: string;
   text?: string;
   image?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: string | number | Date
+  updatedAt?: string | number | Date
 }

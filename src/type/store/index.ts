@@ -25,7 +25,7 @@ export interface TChatStore {
   chats: TUser[];
   messages: TMessage[];
   // activeTab: "chats" | "contacts";
-  // selectedUser: TUser | null;
+  selectedUser: TUser | null;
 
   isUsersLoading: boolean;
   isMessagesLoading: boolean;

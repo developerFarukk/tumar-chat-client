@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import app_axios from "@/lib/axios";
 import { TChatStore } from "@/type/store";
-import { toast } from "sonner";
 import { create } from "zustand";
 
 export const useChatStore = create<TChatStore>((set, get) => ({
@@ -9,7 +8,7 @@ export const useChatStore = create<TChatStore>((set, get) => ({
   chats: [],
   messages: [],
   //   activeTab: "chats",
-  //   selectedUser: null,
+  selectedUser: null,
   isUsersLoading: false,
   isMessagesLoading: false,
   //   isSoundEnabled: JSON.parse(localStorage.getItem("isSoundEnabled")) === true,
