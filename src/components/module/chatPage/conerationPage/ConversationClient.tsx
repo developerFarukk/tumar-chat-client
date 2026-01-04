@@ -22,7 +22,7 @@ const ConversationClient = ({ userId }: TConversation) => {
   const { getMessagesByUserId, messages, isMessagesLoading, selectedUser } =
     useChatStore();
   const { authUser } = useAuthStore();
-  const messageEndRef = useRef(null);
+  const messageEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     getMessagesByUserId(userId);
@@ -41,6 +41,12 @@ const ConversationClient = ({ userId }: TConversation) => {
   // console.log("messffff", messages);
 
   // console.log("selectuser", selectedUser);
+
+  useEffect(() => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   return (
     <div className="border-2 rounded-xl p-2 bg-fuchsia-100">
@@ -124,6 +130,7 @@ const ConversationClient = ({ userId }: TConversation) => {
                   </div>
                 </>
               ))}
+              <div ref={messageEndRef} />
             </div>
           ) : isMessagesLoading ? (
             <LoaderIcon />
