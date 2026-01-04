@@ -2,6 +2,8 @@
 import app_axios from "@/lib/axios";
 import { TChatStore } from "@/type/store";
 import { create } from "zustand";
+import { useAuthStore } from "./useAuthStore";
+import { TMessage } from "@/type/message";
 
 export const useChatStore = create<TChatStore>((set, get) => ({
   allContacts: [],
@@ -19,7 +21,7 @@ export const useChatStore = create<TChatStore>((set, get) => ({
   //   },
 
   //   setActiveTab: (tab) => set({ activeTab: tab }),
-  //   setSelectedUser: (selectedUser) => set({ selectedUser }),
+  setSelectedUser: (selectedUser) => set({ selectedUser }),
 
   getAllContacts: async () => {
     set({ isUsersLoading: true });
@@ -81,36 +83,50 @@ export const useChatStore = create<TChatStore>((set, get) => ({
     }
   },
 
-  //   sendMessage: async (messageData) => {
-  //     const { selectedUser, messages } = get();
-  //     const { authUser } = useAuthStore.getState();
+  sendMessage: async (messageData) => {
+    const { selectedUser, messages } = get();
+    const { authUser } = useAuthStore.getState();
 
-  //     const tempId = `temp-${Date.now()}`;
+    if (!authUser?._id || !selectedUser?._id) {
+      return {
+        success: false,
+        message: "User not selected",
+      };
+    }
 
-  //     const optimisticMessage = {
-  //       _id: tempId,
-  //       senderId: authUser._id,
-  //       receiverId: selectedUser._id,
-  //       text: messageData.text,
-  //       image: messageData.image,
-  //       createdAt: new Date().toISOString(),
-  //       isOptimistic: true, // flag to identify optimistic messages (optional)
-  //     };
-  //     // immidetaly update the ui by adding the message
-  //     set({ messages: [...messages, optimisticMessage] });
+    const tempId = `temp-${Date.now()}`;
 
-  //     try {
-  //       const res = await axiosInstance.post(
-  //         `/messages/send/${selectedUser._id}`,
-  //         messageData
-  //       );
-  //       set({ messages: messages.concat(res.data) });
-  //     } catch (error) {
-  //       // remove optimistic message on failure
-  //       set({ messages: messages });
-  //       toast.error(error.response?.data?.message || "Something went wrong");
-  //     }
-  //   },
+    const optimisticMessage: TMessage = {
+      _id: tempId,
+      senderId: authUser?._id,
+      receiverId: selectedUser?._id,
+      text: messageData.text,
+      image: messageData.image,
+      createdAt: new Date().toISOString(),
+      isOptimistic: true,
+    };
+    // immidetaly update the ui by adding the message
+    set({ messages: [...messages, optimisticMessage] });
+
+    try {
+      const res = await app_axios.post(
+        `/message/send-message/${selectedUser?._id}`,
+        messageData
+      );
+      set({ messages: messages.concat(res?.data?.data) });
+      return {
+        success: true,
+        data: res?.data?.data,
+      };
+    } catch (error: any) {
+      // remove optimistic message on failure
+      set({ messages: messages });
+      return {
+        success: false,
+        message: error?.response?.data?.message || "Something went wrong",
+      };
+    }
+  },
 
   //   subscribeToMessages: () => {
   //     const { selectedUser, isSoundEnabled } = get();

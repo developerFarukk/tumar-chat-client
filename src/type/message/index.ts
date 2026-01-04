@@ -6,4 +6,5 @@ export interface TMessage {
   image?: string;
   createdAt?: string | number | Date
   updatedAt?: string | number | Date
+  isOptimistic: boolean
 }

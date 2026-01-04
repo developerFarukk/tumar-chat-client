@@ -34,7 +34,7 @@ export interface TChatStore {
   // toggleSound: () => void;
 
   // setActiveTab: (tab: "chats" | "contacts") => void;
-  // setSelectedUser: (user: TUser | null) => void;
+  setSelectedUser: (user: TUser | null) => void;
 
   // getAllContacts: () => Promise<void>;
   getAllContacts: () => Promise<{
@@ -53,10 +53,11 @@ export interface TChatStore {
     message?: string;
   }>;
 
-  // sendMessage: (messageData: {
-  //   text?: string;
-  //   image?: string;
-  // }) => Promise<void>;
+  sendMessage: (messageData: { text?: string; image?: string }) => Promise<{
+    success: boolean;
+    data?: any;
+    message?: string;
+  }>;
 
   // subscribeToMessages: () => void;
   // unsubscribeFromMessages: () => void;
