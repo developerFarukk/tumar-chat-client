@@ -64,25 +64,6 @@ export const useChatStore = create<TChatStore>((set, get) => ({
     }
   },
 
-  // getMessagesByUserId: async (userId) => {
-  //   set({ isMessagesLoading: true });
-  //   try {
-  //     const res = await app_axios.get(`/message/chat/${userId}`);
-  //     set({ messages: res?.data?.data });
-  //     return {
-  //       success: true,
-  //       data: res?.data?.data,
-  //     };
-  //   } catch (error: any) {
-  //     return {
-  //       success: false,
-  //       message: error.response?.data?.message || "No chat partner data",
-  //     };
-  //   } finally {
-  //     set({ isMessagesLoading: false });
-  //   }
-  // },
-
   getMessagesByUserId: async (userId) => {
     set({ isMessagesLoading: true });
     try {
