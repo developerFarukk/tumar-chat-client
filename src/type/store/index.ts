@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { TLogin, TUser } from "../auth";
-import { TMessage } from "../message";
+import { TMessage, TSendMessage } from "../message";
 
 // Auth store interface
 export interface TAuthStore {
@@ -53,7 +53,7 @@ export interface TChatStore {
     message?: string;
   }>;
 
-  sendMessage: (messageData: { text?: string; image?: string }) => Promise<{
+  sendMessage: (messageData: TSendMessage) => Promise<{
     success: boolean;
     data?: any;
     message?: string;

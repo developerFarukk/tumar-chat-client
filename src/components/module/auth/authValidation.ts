@@ -39,3 +39,9 @@ export const loginSchema = z.object({
     .string()
     .min(4, { message: "Password is required (min 4 chars)" }),
 });
+
+// send message Validation Schema
+export const sendMessageSchema = z.object({
+  text: z.string().trim().optional(),
+  image: z.any().optional(),
+});

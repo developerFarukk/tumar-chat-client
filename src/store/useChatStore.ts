@@ -64,15 +64,37 @@ export const useChatStore = create<TChatStore>((set, get) => ({
     }
   },
 
+  // getMessagesByUserId: async (userId) => {
+  //   set({ isMessagesLoading: true });
+  //   try {
+  //     const res = await app_axios.get(`/message/chat/${userId}`);
+  //     set({ messages: res?.data?.data });
+  //     return {
+  //       success: true,
+  //       data: res?.data?.data,
+  //     };
+  //   } catch (error: any) {
+  //     return {
+  //       success: false,
+  //       message: error.response?.data?.message || "No chat partner data",
+  //     };
+  //   } finally {
+  //     set({ isMessagesLoading: false });
+  //   }
+  // },
+
   getMessagesByUserId: async (userId) => {
     set({ isMessagesLoading: true });
     try {
       const res = await app_axios.get(`/message/chat/${userId}`);
       set({ messages: res?.data?.data });
-      return {
-        success: true,
-        data: res?.data?.data,
-      };
+
+      // ✅ selectedUser auto-set
+      const allContacts = get().allContacts;
+      const user = allContacts.find((u) => u._id === userId);
+      if (user) set({ selectedUser: user });
+
+      return { success: true, data: res?.data?.data };
     } catch (error: any) {
       return {
         success: false,
@@ -85,6 +107,8 @@ export const useChatStore = create<TChatStore>((set, get) => ({
 
   sendMessage: async (messageData) => {
     const { selectedUser, messages } = get();
+    // console.log("select llll", selectedUser?._id);
+
     const { authUser } = useAuthStore.getState();
 
     if (!authUser?._id || !selectedUser?._id) {
@@ -101,7 +125,10 @@ export const useChatStore = create<TChatStore>((set, get) => ({
       senderId: authUser?._id,
       receiverId: selectedUser?._id,
       text: messageData.text,
-      image: messageData.image,
+      // image: messageData.image
+      //   ? URL.createObjectURL(messageData.image as File)
+      //   : null,
+      image: "",
       createdAt: new Date().toISOString(),
       isOptimistic: true,
     };
@@ -114,16 +141,21 @@ export const useChatStore = create<TChatStore>((set, get) => ({
         messageData
       );
       set({ messages: messages.concat(res?.data?.data) });
+      // console.log("nnn", res?.data?.data);
+
       return {
         success: true,
+        message: res?.data?.message,
         data: res?.data?.data,
       };
     } catch (error: any) {
       // remove optimistic message on failure
       set({ messages: messages });
+      // console.log(error);
+
       return {
         success: false,
-        message: error?.response?.data?.message || "Something went wrong",
+        message: error?.response?.data?.details || "Something went wrong",
       };
     }
   },
