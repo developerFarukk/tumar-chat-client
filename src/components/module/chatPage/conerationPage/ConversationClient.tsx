@@ -6,7 +6,7 @@ import { LoaderIcon, X } from "lucide-react";
 import Link from "next/link";
 import SendMessage from "@/components/shared/SendMessage";
 import { useChatStore } from "@/store/useChatStore";
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { TMessage } from "@/type/message";
 import NoChatHistoryPlaceholder from "./NoChatHistoryPlaceholder";
@@ -77,8 +77,8 @@ const ConversationClient = ({ userId }: TConversation) => {
           {messages?.length > 0 && !isMessagesLoading ? (
             <div className="space-y-3">
               {messages?.map((msg: TMessage) => (
-                <>
-                  <div id={msg?._id}>
+                <React.Fragment key={msg._id}>
+                  <div >
                     {/* My text - Latest message at bottom */}
                     {msg?.senderId === authUser?._id ? (
                       <div className="flex justify-end">
@@ -128,7 +128,7 @@ const ConversationClient = ({ userId }: TConversation) => {
                       </div>
                     )}
                   </div>
-                </>
+                </React.Fragment>
               ))}
               <div ref={messageEndRef} />
             </div>
