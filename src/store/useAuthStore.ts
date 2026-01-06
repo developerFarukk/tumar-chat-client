@@ -4,6 +4,12 @@ import app_axios from "@/lib/axios";
 import { TLogin } from "@/type/auth";
 import { TAuthStore } from "@/type/store";
 import { create } from "zustand";
+import { io } from "socket.io-client";
+
+const BASE_URL =
+  process.env.NODE_ENV === "development"
+    ? process.env.NEXT_PUBLIC_BASE_URL
+    : process.env.NEXT_PUBLIC_BASE_URL;
 
 export const useAuthStore = create<TAuthStore>((set, get) => ({
   authUser: null,
@@ -20,7 +26,7 @@ export const useAuthStore = create<TAuthStore>((set, get) => ({
     try {
       const res = await app_axios.get("/auth/check");
       set({ authUser: res?.data?.data });
-
+      get().connectSocket();
       // return { success: true, data: res?.data };
     } catch (error: any) {
       set({ authUser: null });
@@ -57,6 +63,7 @@ export const useAuthStore = create<TAuthStore>((set, get) => ({
     try {
       const res = await app_axios.post("/auth/login", data);
       set({ authUser: res?.data?.data });
+      get().connectSocket();
 
       return { success: true, data: res?.data };
     } catch (error: any) {
@@ -83,6 +90,8 @@ export const useAuthStore = create<TAuthStore>((set, get) => ({
 
       set({ authUser: null });
 
+      get().disconnectSocket();
+
       return { success: true, data: res.data };
     } catch (error: any) {
       return {
@@ -105,25 +114,27 @@ export const useAuthStore = create<TAuthStore>((set, get) => ({
   //     }
   //   },
 
-  //   connectSocket: () => {
-  //     const { authUser } = get();
-  //     if (!authUser || get().socket?.connected) return;
+  connectSocket: () => {
+    const { authUser } = get();
+    if (!authUser || get().socket?.connected) return;
 
-  //     const socket = io(BASE_URL, {
-  //       withCredentials: true, // this ensures cookies are sent with the connection
-  //     });
+    // console.log("SOCKET BASE_URL =>", BASE_URL)
 
-  //     socket.connect();
+    const socket = io(BASE_URL, {
+      withCredentials: true, // this ensures cookies are sent with the connection
+    });
 
-  //     set({ socket });
+    socket.connect();
 
-  //     // listen for online users event
-  //     socket.on("getOnlineUsers", (userIds) => {
-  //       set({ onlineUsers: userIds });
-  //     });
-  //   },
+    set({ socket });
 
-  //   disconnectSocket: () => {
-  //     if (get().socket?.connected) get().socket.disconnect();
-  //   },
+    // listen for online users event
+    socket.on("getOnlineUsers", (userIds) => {
+      set({ onlineUsers: userIds });
+    });
+  },
+
+  disconnectSocket: () => {
+    if (get().socket?.connected) get().socket.disconnect();
+  },
 }));

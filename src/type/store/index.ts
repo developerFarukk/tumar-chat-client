@@ -17,6 +17,9 @@ export interface TAuthStore {
   logout: () => Promise<any>;
   curentUser: () => Promise<any>;
   // updateProfile: (data: any) => Promise<any>;
+
+  connectSocket: () => void;
+  disconnectSocket: () => void;
 }
 
 // Chats Store Interface
