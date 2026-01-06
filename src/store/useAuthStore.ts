@@ -4,10 +4,8 @@ import app_axios from "@/lib/axios";
 import { TLogin } from "@/type/auth";
 import { TAuthStore } from "@/type/store";
 import { create } from "zustand";
-import { io } from "socket.io-client";
 
-const BASE_URL =
-  process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5001/api/v1";
+// const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5001/api/v1";
 
 export const useAuthStore = create<TAuthStore>((set, get) => ({
   authUser: null,
@@ -23,8 +21,13 @@ export const useAuthStore = create<TAuthStore>((set, get) => ({
     set({ isCheckingAuth: true });
     try {
       const res = await app_axios.get("/auth/check");
-      set({ authUser: res?.data?.data });
-      get().connectSocket();
+      const user = res?.data?.data;
+      set({ authUser: user });
+      if (user) {
+        setTimeout(() => {
+          get().connectSocket();
+        }, 500);
+      }
       // return { success: true, data: res?.data };
     } catch (error: any) {
       set({ authUser: null });
@@ -139,94 +142,276 @@ export const useAuthStore = create<TAuthStore>((set, get) => ({
   //   });
   // },
 
-  connectSocket: () => {
-    const { authUser, socket } = get();
+  // connectSocket: () => {
+  //   const { authUser, socket } = get();
 
-    console.log("🔄 Attempting to connect socket...");
-    console.log("Auth User:", authUser ? "Present" : "Not present");
-    console.log(
-      "Current Socket:",
-      socket?.connected ? "Connected" : "Not connected"
-    );
+  //   console.log("🔍 ===== CONNECT SOCKET CALLED =====");
+  //   console.log("Auth User:", authUser ? "✅ Present" : "❌ Not present");
+  //   console.log("Auth User ID:", authUser?._id || "N/A");
+  //   console.log("Current Socket:", socket ? "✅ Exists" : "❌ Null");
+  //   console.log("Socket Connected:", socket?.connected ? "✅ Yes" : "❌ No");
+  //   console.log("==================================");
 
-    // যদি already connected থাকে
-    if (socket?.connected) {
-      console.log("⚠️ Socket already connected, skipping...");
-      return;
-    }
+  //   console.log("Auth User:", authUser);
+  //   console.log(
+  //     "Current Socket:",
+  //     socket?.connected ? "Connected" : "Not connected"
+  //   );
 
-    // যদি user না থাকে
+  //   // যদি already connected থাকে
+  //   if (socket?.connected) {
+  //     console.log("⚠️ Socket already connected, skipping...");
+  //     return;
+  //   }
+
+  //   // যদি user না থাকে
+  //   if (!authUser) {
+  //     console.log("⚠️ No auth user, cannot connect socket");
+  //     return;
+  //   }
+
+  //   // যদি পুরানো socket থাকে, disconnect করুন
+  //   if (socket) {
+  //     socket.disconnect();
+  //     set({ socket: null });
+  //   }
+
+  //   console.log("🔗 Creating new socket connection to:", BASE_URL);
+
+  //   // ✅ নতুন socket connection তৈরি করুন
+  //   const newSocket: Socket = io(BASE_URL, {
+  //     withCredentials: true,
+  //     transports: ["websocket", "polling"], // ✅ IMPORTANT
+  //     reconnection: true,
+  //     reconnectionAttempts: 5,
+  //     reconnectionDelay: 1000,
+  //     timeout: 20000,
+  //     autoConnect: true,
+  //   });
+
+  //   // ✅ Connection events
+  //   newSocket.on("connect", () => {
+  //     console.log("✅ Socket CONNECTED successfully!");
+  //     console.log("Socket ID:", newSocket.id);
+
+  //     // User information send করতে পারেন
+  //     if (authUser?._id) {
+  //       newSocket.emit("register", { userId: authUser._id });
+  //     }
+
+  //     // Welcome message এর জন্য listen করুন
+  //     newSocket.on("welcome", (data) => {
+  //       console.log("👋 Server welcome:", data);
+  //     });
+  //   });
+
+  //   newSocket.on("connect_error", (error) => {
+  //     console.error("❌ Socket CONNECTION ERROR:", error.message);
+  //     console.error("Error details:", error);
+  //   });
+
+  //   newSocket.on("disconnect", (reason) => {
+  //     console.log("🔌 Socket DISCONNECTED:", reason);
+  //   });
+
+  //   newSocket.on("error", (error) => {
+  //     console.error("💥 Socket ERROR:", error);
+  //   });
+
+  //   // ✅ Test events
+  //   newSocket.on("test-response", (data) => {
+  //     console.log("📨 Test response from server:", data);
+  //   });
+
+  //   // ✅ Online users event
+  //   newSocket.on("getOnlineUsers", (userIds) => {
+  //     console.log("👥 Online users updated:", userIds);
+  //     set({ onlineUsers: userIds });
+  //   });
+
+  //   // ✅ Socket store এ save করুন
+  //   set({ socket: newSocket });
+
+  //   // ✅ Manual connect করান (autoConnect true থাকলেও)
+  //   newSocket.connect();
+
+  //   console.log("🎯 Socket connection initiated");
+  // },
+
+  // connectSocket: async () => {
+  //   const { authUser } = get();
+  //   if (!authUser) return;
+
+  //   try {
+  //     const socketModule = await import("socket.io-client");
+  //     const { io } = socketModule;
+
+  //     if (typeof io === "undefined") {
+  //       console.error("❌ io still undefined after import!");
+  //       return;
+  //     }
+
+  //     // ✅ Server URL
+  //     const SERVER_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
+  //     // ✅ Create socket
+  //     const socket = io(SERVER_URL, {
+  //       withCredentials: true,
+  //       transports: ["websocket", "polling"],
+  //     });
+
+  //     socket.connect();
+
+  //     set({ socket });
+
+  //     socket.on("getOnlineUsers", (userIds) => {
+  //       set({ onlineUsers: userIds });
+  //     });
+
+  //   } catch (error) {
+  //     console.error("💥 Error loading socket.io-client:", error);
+  //   }
+  // },
+
+  connectSocket: async () => {
+    console.log("🔄 === SOCKET CONNECTION START ===");
+
+    const { authUser, socket: existingSocket } = get();
+
     if (!authUser) {
-      console.log("⚠️ No auth user, cannot connect socket");
+      console.log("❌ No auth user, skipping socket connection");
       return;
     }
 
-    // যদি পুরানো socket থাকে, disconnect করুন
-    if (socket) {
-      socket.disconnect();
+    // ✅ যদি আগে থেকে socket connected থাকে
+    if (existingSocket?.connected) {
+      console.log("ℹ️ Socket already connected, ID:", existingSocket.id);
+      return;
+    }
+
+    // ✅ পুরানো socket থাকলে disconnect করুন
+    if (existingSocket) {
+      console.log("♻️ Disconnecting existing socket...");
+      existingSocket.disconnect();
       set({ socket: null });
     }
 
-    console.log("🔗 Creating new socket connection to:", BASE_URL);
+    try {
+      console.log("📦 Loading socket.io-client dynamically...");
 
-    // ✅ নতুন socket connection তৈরি করুন
-    const newSocket: Socket = io(BASE_URL, {
-      withCredentials: true,
-      transports: ["websocket", "polling"], // ✅ IMPORTANT
-      reconnection: true,
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000,
-      timeout: 20000,
-      autoConnect: true,
-    });
+      // ✅ Dynamic import
+      const socketModule = await import("socket.io-client");
+      const { io } = socketModule;
 
-    // ✅ Connection events
-    newSocket.on("connect", () => {
-      console.log("✅ Socket CONNECTED successfully!");
-      console.log("Socket ID:", newSocket.id);
+      console.log("✅ Socket.io-client loaded:", typeof io !== "undefined");
 
-      // User information send করতে পারেন
-      if (authUser?._id) {
-        newSocket.emit("register", { userId: authUser._id });
+      if (typeof io !== "function") {
+        console.error("❌ io is not a function after import!");
+        return;
       }
 
-      // Welcome message এর জন্য listen করুন
-      newSocket.on("welcome", (data) => {
-        console.log("👋 Server welcome:", data);
+      // ✅ Server URL
+      const SERVER_URL =
+        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5001";
+      console.log("🎯 Connecting to:", SERVER_URL);
+
+      // ✅ Create socket with ALL necessary options
+      const newSocket = io(SERVER_URL, {
+        withCredentials: true,
+        transports: ["websocket", "polling"],
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
+        timeout: 20000,
+        autoConnect: true,
+        forceNew: false,
       });
-    });
 
-    newSocket.on("connect_error", (error) => {
-      console.error("❌ Socket CONNECTION ERROR:", error.message);
-      console.error("Error details:", error);
-    });
+      console.log("✅ Socket instance created");
 
-    newSocket.on("disconnect", (reason) => {
-      console.log("🔌 Socket DISCONNECTED:", reason);
-    });
+      // ========== ✅ MUST HAVE EVENT LISTENERS ==========
 
-    newSocket.on("error", (error) => {
-      console.error("💥 Socket ERROR:", error);
-    });
+      // 1. ✅ CONNECT SUCCESS
+      newSocket.on("connect", () => {
+        console.log("🎉 ✅ SOCKET CONNECTED SUCCESSFULLY!");
+        console.log("Socket ID:", newSocket.id);
+        console.log("Connected to:", SERVER_URL);
 
-    // ✅ Test events
-    newSocket.on("test-response", (data) => {
-      console.log("📨 Test response from server:", data);
-    });
+        // Optional: Send user info to server
+        newSocket.emit("register", {
+          userId: authUser._id,
+          userName: authUser.name,
+          timestamp: new Date().toISOString(),
+        });
+      });
 
-    // ✅ Online users event
-    newSocket.on("getOnlineUsers", (userIds) => {
-      console.log("👥 Online users updated:", userIds);
-      set({ onlineUsers: userIds });
-    });
+      // 2. ✅ CONNECT ERROR (MOST IMPORTANT!)
+      newSocket.on("connect_error", (error) => {
+        console.error("❌ SOCKET CONNECTION ERROR:");
+        console.error("Error message:", error.message);
+        console.error("Error type:", error.type);
+        console.error("Full error:", error);
 
-    // ✅ Socket store এ save করুন
-    set({ socket: newSocket });
+        // Specific error handling
+        if (error.message.includes("CORS")) {
+          console.error("⚠️ CORS Error - Check server CORS config");
+        }
+        if (error.message.includes("WebSocket")) {
+          console.error("⚠️ WebSocket Error - Check network/firewall");
+        }
+      });
 
-    // ✅ Manual connect করান (autoConnect true থাকলেও)
-    newSocket.connect();
+      // 3. ✅ DISCONNECT
+      newSocket.on("disconnect", (reason) => {
+        console.log("🔌 Socket disconnected. Reason:", reason);
+      });
 
-    console.log("🎯 Socket connection initiated");
+      // 4. ✅ WELCOME MESSAGE (যদি server থেকে পাঠায়)
+      newSocket.on("welcome", (data) => {
+        console.log("👋 Server welcome message:", data);
+      });
+
+      // 5. ✅ ONLINE USERS
+      newSocket.on("getOnlineUsers", (userIds) => {
+        console.log("👥 Online users updated:", userIds.length, "users");
+        set({ onlineUsers: userIds });
+      });
+
+      // 6. ✅ TEST RESPONSE
+      newSocket.on("test-response", (data) => {
+        console.log("📨 Server test response:", data);
+      });
+
+      // 7. ✅ ERROR EVENT
+      newSocket.on("error", (error) => {
+        console.error("💥 Socket error event:", error);
+      });
+
+      // ✅ Store এ socket save করুন
+      console.log("💾 Saving socket to Zustand store...");
+      set({ socket: newSocket });
+
+      // ✅ Manual connect (যদি autoConnect false থাকে)
+      if (!newSocket.connected) {
+        console.log("🔗 Attempting manual connection...");
+        newSocket.connect();
+      }
+
+      // ✅ 3 seconds পরে status check
+      setTimeout(() => {
+        const currentSocket = get().socket;
+        console.log("🕒 After 3 seconds - Socket status:");
+        console.log(
+          "- Connected:",
+          currentSocket?.connected ? "✅ Yes" : "❌ No"
+        );
+        console.log("- ID:", currentSocket?.id || "N/A");
+      }, 3000);
+
+      console.log("🏁 === SOCKET CONNECTION COMPLETE ===");
+    } catch (error) {
+      console.error("💥 FATAL ERROR in connectSocket:", error);
+    }
   },
 
   // disconnectSocket: () => {
