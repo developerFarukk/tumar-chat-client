@@ -7,9 +7,7 @@ import { create } from "zustand";
 import { io } from "socket.io-client";
 
 const BASE_URL =
-  process.env.NODE_ENV === "development"
-    ? process.env.NEXT_PUBLIC_BASE_URL
-    : process.env.NEXT_PUBLIC_BASE_URL;
+  process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5001/api/v1";
 
 export const useAuthStore = create<TAuthStore>((set, get) => ({
   authUser: null,
@@ -62,8 +60,11 @@ export const useAuthStore = create<TAuthStore>((set, get) => ({
 
     try {
       const res = await app_axios.post("/auth/login", data);
-      set({ authUser: res?.data?.data });
-      get().connectSocket();
+      const user = res?.data?.data;
+      set({ authUser: user });
+      setTimeout(() => {
+        get().connectSocket();
+      }, 1000);
 
       return { success: true, data: res?.data };
     } catch (error: any) {
@@ -81,6 +82,8 @@ export const useAuthStore = create<TAuthStore>((set, get) => ({
     set({ isLoggingOut: true });
 
     try {
+      get().disconnectSocket();
+
       // const res = await app_axios.post("/auth/logout");
       const res = await app_axios.post(
         "/auth/logout",
@@ -88,11 +91,12 @@ export const useAuthStore = create<TAuthStore>((set, get) => ({
         { withCredentials: true } // 👈 double-safety
       );
 
-      set({ authUser: null });
+      set({
+        authUser: null,
+        onlineUsers: [],
+      });
 
-      get().disconnectSocket();
-
-      return { success: true, data: res.data };
+      return { success: true, data: res?.data };
     } catch (error: any) {
       return {
         success: false,
@@ -114,27 +118,137 @@ export const useAuthStore = create<TAuthStore>((set, get) => ({
   //     }
   //   },
 
+  // connectSocket: () => {
+  //   const { authUser } = get();
+  //   if (!authUser || get().socket?.connected) return;
+
+  //   // console.log("SOCKET BASE_URL =>", BASE_URL)
+
+  //   const socket = io(BASE_URL, {
+  //     transports: ["websocket", "polling"],
+  //     withCredentials: true, // this ensures cookies are sent with the connection
+  //   });
+
+  //   socket.connect();
+
+  //   set({ socket });
+
+  //   // listen for online users event
+  //   socket.on("getOnlineUsers", (userIds) => {
+  //     set({ onlineUsers: userIds });
+  //   });
+  // },
+
   connectSocket: () => {
-    const { authUser } = get();
-    if (!authUser || get().socket?.connected) return;
+    const { authUser, socket } = get();
 
-    // console.log("SOCKET BASE_URL =>", BASE_URL)
+    console.log("🔄 Attempting to connect socket...");
+    console.log("Auth User:", authUser ? "Present" : "Not present");
+    console.log(
+      "Current Socket:",
+      socket?.connected ? "Connected" : "Not connected"
+    );
 
-    const socket = io(BASE_URL, {
-      withCredentials: true, // this ensures cookies are sent with the connection
+    // যদি already connected থাকে
+    if (socket?.connected) {
+      console.log("⚠️ Socket already connected, skipping...");
+      return;
+    }
+
+    // যদি user না থাকে
+    if (!authUser) {
+      console.log("⚠️ No auth user, cannot connect socket");
+      return;
+    }
+
+    // যদি পুরানো socket থাকে, disconnect করুন
+    if (socket) {
+      socket.disconnect();
+      set({ socket: null });
+    }
+
+    console.log("🔗 Creating new socket connection to:", BASE_URL);
+
+    // ✅ নতুন socket connection তৈরি করুন
+    const newSocket: Socket = io(BASE_URL, {
+      withCredentials: true,
+      transports: ["websocket", "polling"], // ✅ IMPORTANT
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+      timeout: 20000,
+      autoConnect: true,
     });
 
-    socket.connect();
+    // ✅ Connection events
+    newSocket.on("connect", () => {
+      console.log("✅ Socket CONNECTED successfully!");
+      console.log("Socket ID:", newSocket.id);
 
-    set({ socket });
+      // User information send করতে পারেন
+      if (authUser?._id) {
+        newSocket.emit("register", { userId: authUser._id });
+      }
 
-    // listen for online users event
-    socket.on("getOnlineUsers", (userIds) => {
+      // Welcome message এর জন্য listen করুন
+      newSocket.on("welcome", (data) => {
+        console.log("👋 Server welcome:", data);
+      });
+    });
+
+    newSocket.on("connect_error", (error) => {
+      console.error("❌ Socket CONNECTION ERROR:", error.message);
+      console.error("Error details:", error);
+    });
+
+    newSocket.on("disconnect", (reason) => {
+      console.log("🔌 Socket DISCONNECTED:", reason);
+    });
+
+    newSocket.on("error", (error) => {
+      console.error("💥 Socket ERROR:", error);
+    });
+
+    // ✅ Test events
+    newSocket.on("test-response", (data) => {
+      console.log("📨 Test response from server:", data);
+    });
+
+    // ✅ Online users event
+    newSocket.on("getOnlineUsers", (userIds) => {
+      console.log("👥 Online users updated:", userIds);
       set({ onlineUsers: userIds });
     });
+
+    // ✅ Socket store এ save করুন
+    set({ socket: newSocket });
+
+    // ✅ Manual connect করান (autoConnect true থাকলেও)
+    newSocket.connect();
+
+    console.log("🎯 Socket connection initiated");
   },
 
+  // disconnectSocket: () => {
+  //   if (get().socket?.connected) get().socket.disconnect();
+  // },
+
   disconnectSocket: () => {
-    if (get().socket?.connected) get().socket.disconnect();
+    const { socket } = get();
+    if (socket) {
+      console.log("🔌 Disconnecting socket...");
+      socket.disconnect();
+      set({ socket: null, onlineUsers: [] });
+    }
+  },
+
+  // ✅ Check socket status
+  getSocketStatus: () => {
+    const { socket } = get();
+    return {
+      connected: socket?.connected || false,
+      id: socket?.id || null,
+      active: !!socket,
+    };
   },
 }));
