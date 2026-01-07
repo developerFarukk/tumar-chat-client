@@ -53,8 +53,6 @@ export const useAuthStore = create<TAuthStore>((set, get) => ({
   //   }
   // },
 
-  // Login Function
-
   // Login function
   login: async (data: TLogin) => {
     set({ isLoggingIn: true });
