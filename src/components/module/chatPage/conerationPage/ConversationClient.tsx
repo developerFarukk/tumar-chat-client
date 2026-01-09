@@ -19,23 +19,30 @@ export interface TConversation {
 const ConversationClient = ({ userId }: TConversation) => {
   // console.log("params", userId);
 
-  const { getMessagesByUserId, messages, isMessagesLoading, selectedUser } =
-    useChatStore();
+  const {
+    getMessagesByUserId,
+    messages,
+    isMessagesLoading,
+    selectedUser,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  } = useChatStore();
   const { authUser } = useAuthStore();
   const messageEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     getMessagesByUserId(userId);
-    // subscribeToMessages();
+    subscribeToMessages();
 
     // clean up
     // return () => unsubscribeFromMessages();
+    return unsubscribeFromMessages;
   }, [
     selectedUser,
     getMessagesByUserId,
     userId,
-    // subscribeToMessages,
-    // unsubscribeFromMessages,
+    subscribeToMessages,
+    unsubscribeFromMessages,
   ]);
 
   // console.log("messffff", messages);
@@ -78,7 +85,7 @@ const ConversationClient = ({ userId }: TConversation) => {
             <div className="space-y-3">
               {messages?.map((msg: TMessage) => (
                 <React.Fragment key={msg._id}>
-                  <div >
+                  <div>
                     {/* My text - Latest message at bottom */}
                     {msg?.senderId === authUser?._id ? (
                       <div className="flex justify-end">

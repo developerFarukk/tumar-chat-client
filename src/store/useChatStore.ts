@@ -5,24 +5,19 @@ import { create } from "zustand";
 import { useAuthStore } from "./useAuthStore";
 import { TMessage } from "@/type/message";
 
+let messageHandler: ((msg: TMessage) => void) | null = null;
+
 export const useChatStore = create<TChatStore>((set, get) => ({
   allContacts: [],
   chats: [],
   messages: [],
-  //   activeTab: "chats",
   selectedUser: null,
   isUsersLoading: false,
   isMessagesLoading: false,
-  // isSoundEnabled: JSON.parse(localStorage.getItem("isSoundEnabled")) === true,
   isSoundEnabled:
     typeof window !== "undefined"
       ? JSON.parse(localStorage.getItem("isSoundEnabled") ?? "true")
       : true,
-
-  // toggleSound: () => {
-  //   localStorage.setItem("isSoundEnabled", !get().isSoundEnabled);
-  //   set({ isSoundEnabled: !get().isSoundEnabled });
-  // },
 
   toggleSound: () => {
     const nextValue = !get().isSoundEnabled;
@@ -157,28 +152,30 @@ export const useChatStore = create<TChatStore>((set, get) => ({
     if (!selectedUser) return;
 
     const socket = useAuthStore.getState().socket;
+    if (!socket) return;
 
-    socket.on("newMessage", (newMessage: TMessage) => {
-      const isMessageSentFromSelectedUser =
-        newMessage.senderId === selectedUser._id;
-      if (!isMessageSentFromSelectedUser) return;
+    messageHandler = (newMessage: TMessage) => {
+      const isFromSelectedUser = newMessage.senderId === selectedUser._id;
 
-      const currentMessages = get().messages;
-      set({ messages: [...currentMessages, newMessage] });
+      if (!isFromSelectedUser) return;
+
+      set({ messages: [...get().messages, newMessage] });
 
       if (isSoundEnabled) {
-        const notificationSound = new Audio("/sounds/notification.mp3");
-
-        notificationSound.currentTime = 0; // reset to start
-        notificationSound
-          .play()
-          .catch((e) => console.log("Audio play failed:", e));
+        const sound = new Audio("/sounds/notification.mp3");
+        sound.currentTime = 0;
+        sound.play().catch(() => {});
       }
-    });
+    };
+
+    socket.on("newMessage", messageHandler);
   },
 
   unsubscribeFromMessages: () => {
     const socket = useAuthStore.getState().socket;
-    socket.off("newMessage");
+    if (!socket || !messageHandler) return;
+
+    socket.off("newMessage", messageHandler);
+    messageHandler = null;
   },
 }));
