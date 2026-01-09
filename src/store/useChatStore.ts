@@ -13,12 +13,23 @@ export const useChatStore = create<TChatStore>((set, get) => ({
   selectedUser: null,
   isUsersLoading: false,
   isMessagesLoading: false,
-  //   isSoundEnabled: JSON.parse(localStorage.getItem("isSoundEnabled")) === true,
+  // isSoundEnabled: JSON.parse(localStorage.getItem("isSoundEnabled")) === true,
+  isSoundEnabled:
+    typeof window !== "undefined"
+      ? JSON.parse(localStorage.getItem("isSoundEnabled") ?? "true")
+      : true,
 
-  //   toggleSound: () => {
-  //     localStorage.setItem("isSoundEnabled", !get().isSoundEnabled);
-  //     set({ isSoundEnabled: !get().isSoundEnabled });
-  //   },
+  // toggleSound: () => {
+  //   localStorage.setItem("isSoundEnabled", !get().isSoundEnabled);
+  //   set({ isSoundEnabled: !get().isSoundEnabled });
+  // },
+
+  toggleSound: () => {
+    const nextValue = !get().isSoundEnabled;
+
+    localStorage.setItem("isSoundEnabled", JSON.stringify(nextValue));
+    set({ isSoundEnabled: nextValue });
+  },
 
   //   setActiveTab: (tab) => set({ activeTab: tab }),
   setSelectedUser: (selectedUser) => set({ selectedUser }),
@@ -141,33 +152,33 @@ export const useChatStore = create<TChatStore>((set, get) => ({
     }
   },
 
-  //   subscribeToMessages: () => {
-  //     const { selectedUser, isSoundEnabled } = get();
-  //     if (!selectedUser) return;
+  subscribeToMessages: () => {
+    const { selectedUser, isSoundEnabled } = get();
+    if (!selectedUser) return;
 
-  //     const socket = useAuthStore.getState().socket;
+    const socket = useAuthStore.getState().socket;
 
-  //     socket.on("newMessage", (newMessage) => {
-  //       const isMessageSentFromSelectedUser =
-  //         newMessage.senderId === selectedUser._id;
-  //       if (!isMessageSentFromSelectedUser) return;
+    socket.on("newMessage", (newMessage: TMessage) => {
+      const isMessageSentFromSelectedUser =
+        newMessage.senderId === selectedUser._id;
+      if (!isMessageSentFromSelectedUser) return;
 
-  //       const currentMessages = get().messages;
-  //       set({ messages: [...currentMessages, newMessage] });
+      const currentMessages = get().messages;
+      set({ messages: [...currentMessages, newMessage] });
 
-  //       if (isSoundEnabled) {
-  //         const notificationSound = new Audio("/sounds/notification.mp3");
+      if (isSoundEnabled) {
+        const notificationSound = new Audio("/sounds/notification.mp3");
 
-  //         notificationSound.currentTime = 0; // reset to start
-  //         notificationSound
-  //           .play()
-  //           .catch((e) => console.log("Audio play failed:", e));
-  //       }
-  //     });
-  //   },
+        notificationSound.currentTime = 0; // reset to start
+        notificationSound
+          .play()
+          .catch((e) => console.log("Audio play failed:", e));
+      }
+    });
+  },
 
-  //   unsubscribeFromMessages: () => {
-  //     const socket = useAuthStore.getState().socket;
-  //     socket.off("newMessage");
-  //   },
+  unsubscribeFromMessages: () => {
+    const socket = useAuthStore.getState().socket;
+    socket.off("newMessage");
+  },
 }));

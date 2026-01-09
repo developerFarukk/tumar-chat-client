@@ -32,9 +32,9 @@ export interface TChatStore {
 
   isUsersLoading: boolean;
   isMessagesLoading: boolean;
-  // isSoundEnabled: boolean;
+  isSoundEnabled: boolean;
 
-  // toggleSound: () => void;
+  toggleSound: () => void;
 
   // setActiveTab: (tab: "chats" | "contacts") => void;
   setSelectedUser: (user: TUser | null) => void;
@@ -62,6 +62,6 @@ export interface TChatStore {
     message?: string;
   }>;
 
-  // subscribeToMessages: () => void;
-  // unsubscribeFromMessages: () => void;
+  subscribeToMessages: () => void;
+  unsubscribeFromMessages: () => void;
 }

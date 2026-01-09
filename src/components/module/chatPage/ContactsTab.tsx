@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import userProfile from "../../../../public/avatar.png";
 import { TUser } from "@/type/auth";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export interface TContactsData {
   allContacts: TUser[];
@@ -13,6 +14,8 @@ export interface TContactsData {
 
 const ContactsTab = ({ allContacts }: TContactsData) => {
   // console.log(allContacts?.length);
+
+  const { onlineUsers } = useAuthStore();
 
   return (
     <div className="">
@@ -38,7 +41,8 @@ const ContactsTab = ({ allContacts }: TContactsData) => {
                     </h2>
                   </div>
 
-                  <h2 className="">Offline</h2>
+                  {/* <h2 className="">Offline</h2> */}
+                  <div>{`${onlineUsers.includes(contact?._id) ? "online" : "offline"}`}</div>
                 </div>
               </div>
             </Link>

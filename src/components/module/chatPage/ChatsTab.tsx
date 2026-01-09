@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import userProfile from "../../../../public/avatar.png";
 import { TUser } from "@/type/auth";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export interface TChtaPertnerContactsData {
   chatsPerner: TUser[];
@@ -11,6 +12,11 @@ export interface TChtaPertnerContactsData {
 
 const ChatsTab = ({ chatsPerner }: TChtaPertnerContactsData) => {
   // console.log(chatsPerner);
+
+  const { onlineUsers } = useAuthStore();
+
+  // console.log("online users", onlineUsers);
+  
 
   return (
     <div className="">
@@ -36,7 +42,8 @@ const ChatsTab = ({ chatsPerner }: TChtaPertnerContactsData) => {
                     </h2>
                   </div>
 
-                  <h2 className="">Offline</h2>
+                  {/* <h2 className="">Offline</h2> */}
+                  <div>{`${onlineUsers.includes(contact?._id) ? "online" : "offline"}`}</div>
                 </div>
               </div>
             </Link>
