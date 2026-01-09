@@ -114,9 +114,26 @@ export function NavUser() {
                 <CreditCard />
                 Billing
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
+              {/* <DropdownMenuItem>
+                <div className="flex justify-between items-center">
+                  <div className="flex">
+                    <Bell />
+                    Notifications Sound
+                  </div>
+                  <div className="text-right">musi</div>
+                </div>
+              </DropdownMenuItem> */}
+              <DropdownMenuItem asChild>
+                <div className="w-full flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <Bell className="h-4 w-4" />
+                    <span className="text-sm">Notification Sound</span>
+                  </div>
+
+                  <span className="text-xs text-muted-foreground whitespace-nowrap">
+                    Music
+                  </span>
+                </div>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

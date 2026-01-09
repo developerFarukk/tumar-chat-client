@@ -2,6 +2,8 @@
 
 import * as React from "react";
 
+// const mouseClickSound = new Audio("../../../../../public/sounds");
+
 import {
   Sidebar,
   SidebarContent,
@@ -22,11 +24,21 @@ import Loader from "@/components/shared/Loader";
 import ChatsTab from "../ChatsTab";
 import ContactsTab from "../ContactsTab";
 import { useChatStore } from "@/store/useChatStore";
+import { Volume2Icon, VolumeOffIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const clickSoundRef = React.useRef<HTMLAudioElement | null>(null);
   const { user, loading } = useCurrentUser();
-  const { getAllContacts, getMyChatPartners, allContacts, chats, isUsersLoading } =
-    useChatStore();
+  const {
+    getAllContacts,
+    getMyChatPartners,
+    allContacts,
+    chats,
+    isUsersLoading,
+    isSoundEnabled,
+    toggleSound,
+  } = useChatStore();
 
   React.useEffect(() => {
     getAllContacts();
@@ -35,6 +47,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   // console.log("get all contacts", allContacts);
   // console.log("get all contacts", chats);
+
+  React.useEffect(() => {
+    clickSoundRef.current = new Audio("/sounds/click.mp3");
+  }, []);
 
   if (loading || isUsersLoading)
     return (
@@ -51,44 +67,46 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton
               size="lg"
               asChild
-              className="bg-fuchsia-300 hover:bg-fuchsia-400 p-1"
+              className=" p-1 bg-fuchsia-300 hover:bg-fuchsia-400"
             >
-              <Link href="/chat">
-                <div className="  flex  size-12 items-center justify-center p-1">
-                  {/* <CircleUserRound /> */}
-                  <Image
-                    // src={selectedImg || authUser.profilePic || "/avatar.png"}
-                    src={user?.image || userProfile}
-                    alt="User image"
-                    className="size-full object-cover"
-                    height={100}
-                    width={100}
-                  />
+              <div className="flex justify-between items-center p-1 ">
+                <Link href="/chat" className="flex items-center justify-center text-center">
+                  <div className="  flex  size-12 items-center justify-center p-1 ">
+                    {/* <CircleUserRound /> */}
+                    <Image
+                      // src={selectedImg || authUser.profilePic || "/avatar.png"}
+                      src={user?.image || userProfile}
+                      alt="User image"
+                      className="size-full object-cover"
+                      height={100}
+                      width={100}
+                    />
+                  </div>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-medium">{user?.name}</span>
+                    <span className="truncate text-xs">Online</span>
+                  </div>
+                </Link>
+                <div className="p-2">
+                  <Button
+                    className="bg-yellow-100 text-black hover:bg-yellow-400"
+                    onClick={() => {
+                      if (isSoundEnabled && clickSoundRef.current) {
+                        clickSoundRef.current.currentTime = 0;
+                        clickSoundRef.current.play().catch(() => {});
+                      }
+
+                      toggleSound();
+                    }}
+                  >
+                    {isSoundEnabled ? (
+                      <Volume2Icon className="size-5" />
+                    ) : (
+                      <VolumeOffIcon className="size-5" />
+                    )}
+                  </Button>
                 </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user?.name}</span>
-                  <span className="truncate text-xs">Online</span>
-                </div>
-              </Link>
-              {/* <header className="flex h-16 shrink-0 items-center gap-2">
-                <div className="flex items-center gap-2 px-4">
-                  <SidebarTrigger className="-ml-1" />
-                  <Separator orientation="vertical" className="mr-2 h-4" />
-                  <Breadcrumb>
-                    <BreadcrumbList>
-                      <BreadcrumbItem className="hidden md:block">
-                        <BreadcrumbLink href="#">
-                          Building Application
-                        </BreadcrumbLink>
-                      </BreadcrumbItem>
-                      <BreadcrumbSeparator className="hidden md:block" />
-                      <BreadcrumbItem>
-                        <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                      </BreadcrumbItem>
-                    </BreadcrumbList>
-                  </Breadcrumb>
-                </div>
-              </header> */}
+              </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
