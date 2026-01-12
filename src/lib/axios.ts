@@ -1,5 +1,5 @@
 // "use server";
-"use client"
+"use client";
 
 import axios from "axios";
 // import { cookies } from "next/headers";
@@ -11,7 +11,8 @@ import axios from "axios";
 // });
 
 const app_axios = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BASE_URL_LOCAL || process.env.NEXT_PUBLIC_BASE_URL_LIVE,
+  // baseURL: process.env.NEXT_PUBLIC_BASE_URL_LOCAL || process.env.NEXT_PUBLIC_BASE_URL_LIVE,
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL_LIVE,
   withCredentials: true,
 });
 
@@ -20,7 +21,7 @@ const app_axios = axios.create({
 //     const cookieStore = await cookies();
 //     const token = cookieStore.get("accessToken")?.value;
 //     console.log("token", token);
-    
+
 //     if (token) {
 //       config.headers.Authorization = `${token}`;
 //     }
