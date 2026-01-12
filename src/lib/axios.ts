@@ -11,7 +11,7 @@ import axios from "axios";
 // });
 
 const app_axios = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL_LOCAL || process.env.NEXT_PUBLIC_BASE_URL_LIVE,
   withCredentials: true,
 });
 

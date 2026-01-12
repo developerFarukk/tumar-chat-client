@@ -151,7 +151,7 @@ export const useAuthStore = create<TAuthStore>((set, get) => ({
       }
 
       // ✅ Server URL
-      const SERVER_URL = process.env.NEXT_PUBLIC_BASE_URL_SOCKET;
+      const SERVER_URL = process.env.NEXT_PUBLIC_BASE_URL_SOCKET_LOCAL || process.env.NEXT_PUBLIC_BASE_URL_SOCKET_LIVE;
       // console.log("🎯 Connecting to:", SERVER_URL);
 
       // ✅ Create socket with ALL necessary options
